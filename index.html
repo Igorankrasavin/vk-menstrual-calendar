@@ -2,20 +2,35 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>VK Menstrual Calendar</title>
+    <title>Женский календарь</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
+        :root {
+            --vk-blue: #4C75A3;
+            --vk-blue-light: #e7f1fb;
+            --vk-accent: #f78fb3;
+            --bg-main: #f5f7fb;
+            --card-bg: #ffffff;
+            --text-main: #222;
+            --text-muted: #777;
+            --border-soft: #e0e4ee;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             margin: 0;
             padding: 0;
-            background: #f8f4fa;
-            color: #333;
+            background: radial-gradient(circle at top left, #f9f0ff 0%, var(--bg-main) 60%);
+            color: var(--text-main);
         }
 
         .app {
-            max-width: 480px;
+            max-width: 520px;
             margin: 0 auto;
             padding: 16px;
         }
@@ -24,37 +39,71 @@
             font-size: 20px;
             text-align: center;
             margin-bottom: 12px;
+            color: var(--vk-blue);
+        }
+
+        .tagline {
+            font-size: 13px;
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 10px;
         }
 
         .card {
-            background: #ffffff;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border-radius: 14px;
             padding: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
             margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.8);
         }
 
         .card-title {
-            font-size: 16px;
+            font-size: 15px;
             margin-bottom: 8px;
             font-weight: 600;
+            color: var(--vk-blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-title span.icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+            background: var(--vk-blue-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--vk-blue);
         }
 
         label {
-            font-size: 14px;
+            font-size: 13px;
             display: block;
             margin-bottom: 4px;
+            color: #444;
         }
 
         input[type="date"],
-        input[type="number"] {
+        input[type="number"],
+        select,
+        textarea {
             width: 100%;
             box-sizing: border-box;
             padding: 6px 8px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-soft);
+            font-size: 13px;
             margin-bottom: 8px;
+            background: #fafbff;
+        }
+
+        textarea {
+            min-height: 60px;
+            resize: vertical;
         }
 
         input[type="number"]::-webkit-outer-spin-button,
@@ -65,20 +114,35 @@
 
         .small {
             font-size: 12px;
-            color: #777;
+            color: var(--text-muted);
         }
 
         .summary {
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.5;
+        }
+
+        .summary .info-row {
+            margin-top: 4px;
         }
 
         .summary span.label {
-            color: #666;
+            color: #555;
         }
 
         .summary span.value {
             font-weight: 600;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: var(--vk-blue-light);
+            font-size: 11px;
+            color: var(--vk-blue);
+            margin-left: 4px;
         }
 
         .calendar-header {
@@ -94,10 +158,16 @@
 
         .nav-btn {
             border: none;
-            background: none;
+            background: #eef3fb;
+            color: var(--vk-blue);
             font-size: 18px;
-            padding: 2px 8px;
+            padding: 2px 10px;
             cursor: pointer;
+            border-radius: 999px;
+        }
+
+        .nav-btn:active {
+            background: #dde7fb;
         }
 
         table.calendar {
@@ -114,23 +184,30 @@
         }
 
         table.calendar td {
-            height: 40px;
+            height: 42px;
             text-align: center;
             vertical-align: middle;
             border-radius: 10px;
             position: relative;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        table.calendar td:hover {
+            background: #f0f4ff;
         }
 
         table.calendar td span.day-number {
-            display: inline-block;
+            display: inline-flex;
             width: 26px;
             height: 26px;
-            line-height: 26px;
+            align-items: center;
+            justify-content: center;
             border-radius: 50%;
         }
 
         table.calendar td.today span.day-number {
-            border: 1px solid #8e44ad;
+            border: 1px solid var(--vk-blue);
         }
 
         table.calendar td.menstruation {
@@ -143,6 +220,17 @@
 
         table.calendar td.ovulation span.day-number {
             border: 2px solid #f39c12;
+        }
+
+        table.calendar td.has-note::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            right: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--vk-accent);
         }
 
         .legend {
@@ -181,17 +269,161 @@
             background: transparent;
         }
 
-        .info-row {
-            margin-top: 4px;
+        .legend-color.note {
+            background: var(--vk-accent);
+            border-radius: 50%;
+        }
+
+        .note-panel {
+            border-top: 1px dashed var(--border-soft);
+            margin-top: 8px;
+            padding-top: 8px;
+        }
+
+        .note-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .note-date-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .note-date-label span {
+            color: var(--vk-blue);
+        }
+
+        .chips-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--border-soft);
+            font-size: 12px;
+            cursor: pointer;
+            background: #fafbff;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chip.active {
+            background: var(--vk-blue);
+            color: #fff;
+            border-color: var(--vk-blue);
+        }
+
+        .chip .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--vk-accent);
+        }
+
+        .drops-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .drop-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            background: #fafbff;
+        }
+
+        .drop-btn.active {
+            background: #ffceda;
+            border-color: #ff8da7;
+            color: #a0224a;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        .row-two-cols {
+            display: flex;
+            gap: 8px;
+        }
+
+        .row-two-cols > div {
+            flex: 1;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 500;
+            margin: 6px 0 4px;
+            color: #444;
+        }
+
+        .note-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .btn {
+            border-radius: 999px;
+            border: none;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--vk-blue);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #eef3fb;
+            color: var(--vk-blue);
+        }
+
+        .note-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
     </style>
 </head>
 <body>
 <div class="app">
     <h1>Женский календарь</h1>
+    <div class="tagline">Цикл, овуляция, заметки и самочувствие в одном месте</div>
 
     <div class="card">
-        <div class="card-title">Данные цикла</div>
+        <div class="card-title">
+            <span class="icon">ⓘ</span>
+            <span>Данные цикла</span>
+        </div>
 
         <label for="lastPeriod">Дата начала последней менструации</label>
         <input type="date" id="lastPeriod">
@@ -208,7 +440,11 @@
     </div>
 
     <div class="card">
-        <div class="card-title">Расчёт цикла</div>
+        <div class="card-title">
+            <span class="icon">❤</span>
+            <span>Расчёт цикла</span>
+            <span class="badge">бета</span>
+        </div>
         <div class="summary">
             <div class="info-row">
                 <span class="label">Текущий день цикла: </span>
@@ -226,6 +462,11 @@
     </div>
 
     <div class="card">
+        <div class="card-title">
+            <span class="icon">📅</span>
+            <span>Календарь и заметки</span>
+        </div>
+
         <div class="calendar-header">
             <button class="nav-btn" id="prevMonthBtn">&lt;</button>
             <div class="month-name" id="monthName"></div>
@@ -262,9 +503,97 @@
                 <div class="legend-color ovul"></div>
                 <span>овуляция</span>
             </div>
+            <div class="legend-item">
+                <div class="legend-color note"></div>
+                <span>есть заметки</span>
+            </div>
+        </div>
+
+        <div class="note-panel" id="notePanel">
+            <div class="note-panel-header">
+                <div class="note-date-label">
+                    День: <span id="noteDateLabel">не выбран</span>
+                </div>
+            </div>
+
+            <div class="section-label">Менструация</div>
+            <div class="drops-row" id="dropsRow">
+                <button class="drop-btn" data-level="1">💧</button>
+                <button class="drop-btn" data-level="2">💧💧</button>
+                <button class="drop-btn" data-level="3">💧💧💧</button>
+                <button class="drop-btn" data-level="4">💧💧💧💧</button>
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" id="noteEndPeriod">
+                <label for="noteEndPeriod">Сегодня конец менструации</label>
+            </div>
+
+            <div class="section-label">Общие заметки</div>
+            <textarea id="noteText" placeholder="Свободные заметки о самочувствии, событиях, наблюдениях..."></textarea>
+
+            <div class="section-label">Лекарства и тест</div>
+            <div class="row-two-cols">
+                <div>
+                    <label for="noteMedicine">Лекарство</label>
+                    <input type="text" id="noteMedicine" placeholder="Название / доза">
+                </div>
+                <div>
+                    <label for="noteOvulationTest">Тест на овуляцию</label>
+                    <select id="noteOvulationTest">
+                        <option value="">—</option>
+                        <option value="positive">Положительный</option>
+                        <option value="negative">Отрицательный</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section-label">События и симптомы</div>
+            <div class="chips-row" id="chipsRowSex">
+                <div class="chip" data-key="sex_yes">
+                    <span class="dot"></span> Половой акт был
+                </div>
+                <div class="chip" data-key="sex_no">
+                    <span class="dot"></span> Полового акта не было
+                </div>
+            </div>
+
+            <div class="chips-row" id="chipsRowSymptoms">
+                <div class="chip" data-key="pain">Боль внизу живота</div>
+                <div class="chip" data-key="breast">Чувствительная грудь</div>
+                <div class="chip" data-key="headache">Головная боль</div>
+                <div class="chip" data-key="pms">ПМС / раздражительность</div>
+                <div class="chip" data-key="fatigue">Усталость</div>
+            </div>
+
+            <div class="section-label">Настроение и параметры</div>
+            <div class="chips-row" id="chipsRowMood">
+                <div class="chip" data-key="calm">Спокойно</div>
+                <div class="chip" data-key="sad">Грусть</div>
+                <div class="chip" data-key="angry">Раздражение</div>
+                <div class="chip" data-key="energy">Много энергии</div>
+            </div>
+
+            <div class="row-two-cols">
+                <div>
+                    <label for="noteWeight">Вес (кг)</label>
+                    <input type="number" id="noteWeight" step="0.1" placeholder="Напр. 60.5">
+                </div>
+                <div>
+                    <label for="noteTemperature">Температура (°C)</label>
+                    <input type="number" id="noteTemperature" step="0.01" placeholder="Напр. 36.6">
+                </div>
+            </div>
+
+            <div class="note-actions">
+                <button class="btn btn-secondary" id="noteClearBtn">Очистить</button>
+                <button class="btn btn-primary" id="noteSaveBtn">Сохранить</button>
+            </div>
+            <div class="note-hint">
+                Заметки сохраняются на этом устройстве. Позже можно добавить синхронизацию.
+            </div>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -281,8 +610,28 @@
     const prevMonthBtn = document.getElementById('prevMonthBtn');
     const nextMonthBtn = document.getElementById('nextMonthBtn');
 
+    const notePanel = document.getElementById('notePanel');
+    const noteDateLabel = document.getElementById('noteDateLabel');
+
+    const dropsRow = document.getElementById('dropsRow');
+    const noteEndPeriod = document.getElementById('noteEndPeriod');
+    const noteText = document.getElementById('noteText');
+    const noteMedicine = document.getElementById('noteMedicine');
+    const noteOvulationTest = document.getElementById('noteOvulationTest');
+
+    const chipsRowSex = document.getElementById('chipsRowSex');
+    const chipsRowSymptoms = document.getElementById('chipsRowSymptoms');
+    const chipsRowMood = document.getElementById('chipsRowMood');
+
+    const noteWeight = document.getElementById('noteWeight');
+    const noteTemperature = document.getElementById('noteTemperature');
+
+    const noteSaveBtn = document.getElementById('noteSaveBtn');
+    const noteClearBtn = document.getElementById('noteClearBtn');
+
     let currentCalendarYear;
     let currentCalendarMonth; // 0-11
+    let selectedDate = null;
 
     const monthNames = [
         'Январь','Февраль','Март','Апрель','Май','Июнь',
@@ -307,6 +656,13 @@
         return `${day}.${month}.${year}`;
     }
 
+    function formatKeyDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${year}-${month}-${day}`;
+    }
+
     function addDays(date, days) {
         const result = new Date(date.getTime());
         result.setDate(result.getDate() + days);
@@ -327,7 +683,9 @@
         }
 
         const today = new Date();
-        const diffMs = today.setHours(0,0,0,0) - lastPeriodDate.setHours(0,0,0,0);
+        const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const lastMidnight = new Date(lastPeriodDate.getFullYear(), lastPeriodDate.getMonth(), lastPeriodDate.getDate());
+        const diffMs = todayMidnight.getTime() - lastMidnight.getTime();
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
         let currentDayCycle = (diffDays % cycleLength) + 1;
@@ -369,6 +727,28 @@
         return time >= start.getTime() && time <= end.getTime();
     }
 
+    function loadNotes() {
+        try {
+            const raw = localStorage.getItem('vkMenstrualNotes');
+            if (!raw) return {};
+            return JSON.parse(raw);
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function saveNotes(notes) {
+        try {
+            localStorage.setItem('vkMenstrualNotes', JSON.stringify(notes));
+        } catch (e) {
+            console.error('Не удалось сохранить заметки', e);
+        }
+    }
+
+    function getNoteForDate(dateKey, notes) {
+        return notes[dateKey] || null;
+    }
+
     function renderCalendar(lastPeriodDate, cycleLength, periodLength, ovulationDate) {
         const today = new Date();
 
@@ -387,6 +767,7 @@
 
         let dateNumber = 1;
         const fertileWindow = ovulationDate ? getFertileWindow(ovulationDate) : null;
+        const notes = loadNotes();
 
         for (let week = 0; week < 6; week++) {
             const row = document.createElement('tr');
@@ -409,7 +790,6 @@
                     }
 
                     if (lastPeriodDate && cycleLength && periodLength && cycleLength > 0) {
-                        let tempStart = new Date(lastPeriodDate.getTime());
                         for (let n = -1; n <= 3; n++) {
                             const periodStart = addDays(lastPeriodDate, n * cycleLength);
                             const periodEnd = addDays(periodStart, periodLength - 1);
@@ -429,6 +809,16 @@
                         cell.classList.add('fertile');
                     }
 
+                    const dateKey = formatKeyDate(cellDate);
+                    const note = getNoteForDate(dateKey, notes);
+                    if (note) {
+                        cell.classList.add('has-note');
+                    }
+
+                    cell.addEventListener('click', () => {
+                        onDayClick(cellDate);
+                    });
+
                     cell.appendChild(span);
                     dateNumber++;
                 }
@@ -443,6 +833,173 @@
             }
         }
     }
+
+    function onDayClick(date) {
+        selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        noteDateLabel.textContent = formatDate(selectedDate);
+
+        const notes = loadNotes();
+        const dateKey = formatKeyDate(selectedDate);
+        const note = getNoteForDate(dateKey, notes);
+
+        dropsRow.querySelectorAll('.drop-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        noteEndPeriod.checked = false;
+        noteText.value = '';
+        noteMedicine.value = '';
+        noteOvulationTest.value = '';
+        noteWeight.value = '';
+        noteTemperature.value = '';
+
+        chipsRowSex.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+        chipsRowSymptoms.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+        chipsRowMood.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+
+        if (note) {
+            if (note.flowLevel) {
+                const btn = dropsRow.querySelector(`.drop-btn[data-level="${note.flowLevel}"]`);
+                if (btn) btn.classList.add('active');
+            }
+            if (note.endPeriod) noteEndPeriod.checked = true;
+            if (note.text) noteText.value = note.text;
+            if (note.medicine) noteMedicine.value = note.medicine;
+            if (note.ovulationTest) noteOvulationTest.value = note.ovulationTest;
+            if (note.weight !== undefined) noteWeight.value = note.weight;
+            if (note.temperature !== undefined) noteTemperature.value = note.temperature;
+
+            if (note.sex) {
+                chipsRowSex.querySelectorAll('.chip').forEach(chip => {
+                    if (chip.dataset.key === note.sex) {
+                        chip.classList.add('active');
+                    }
+                });
+            }
+
+            if (Array.isArray(note.symptoms)) {
+                chipsRowSymptoms.querySelectorAll('.chip').forEach(chip => {
+                    if (note.symptoms.includes(chip.dataset.key)) {
+                        chip.classList.add('active');
+                    }
+                });
+            }
+
+            if (note.mood) {
+                chipsRowMood.querySelectorAll('.chip').forEach(chip => {
+                    if (chip.dataset.key === note.mood) {
+                        chip.classList.add('active');
+                    }
+                });
+            }
+        }
+    }
+
+    dropsRow.addEventListener('click', (event) => {
+        const btn = event.target.closest('.drop-btn');
+        if (!btn) return;
+        dropsRow.querySelectorAll('.drop-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+
+    function setupChipsRow(rowElement, singleSelect) {
+        rowElement.addEventListener('click', (event) => {
+            const chip = event.target.closest('.chip');
+            if (!chip) return;
+
+            if (singleSelect) {
+                rowElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            } else {
+                chip.classList.toggle('active');
+            }
+        });
+    }
+
+    setupChipsRow(chipsRowSex, true);
+    setupChipsRow(chipsRowMood, true);
+    setupChipsRow(chipsRowSymptoms, false);
+
+    noteSaveBtn.addEventListener('click', () => {
+        if (!selectedDate) {
+            alert('Сначала выберите день в календаре.');
+            return;
+        }
+
+        const dateKey = formatKeyDate(selectedDate);
+        const notes = loadNotes();
+
+        let flowLevel = null;
+        const activeDrop = dropsRow.querySelector('.drop-btn.active');
+        if (activeDrop) {
+            flowLevel = parseInt(activeDrop.dataset.level, 10);
+        }
+
+        let sex = null;
+        chipsRowSex.querySelectorAll('.chip').forEach(chip => {
+            if (chip.classList.contains('active')) {
+                sex = chip.dataset.key;
+            }
+        });
+
+        const symptoms = [];
+        chipsRowSymptoms.querySelectorAll('.chip').forEach(chip => {
+            if (chip.classList.contains('active')) {
+                symptoms.push(chip.dataset.key);
+            }
+        });
+
+        let mood = null;
+        chipsRowMood.querySelectorAll('.chip').forEach(chip => {
+            if (chip.classList.contains('active')) {
+                mood = chip.dataset.key;
+            }
+        });
+
+        const weight = noteWeight.value ? parseFloat(noteWeight.value) : undefined;
+        const temperature = noteTemperature.value ? parseFloat(noteTemperature.value) : undefined;
+
+        notes[dateKey] = {
+            flowLevel,
+            endPeriod: noteEndPeriod.checked,
+            text: noteText.value || '',
+            medicine: noteMedicine.value || '',
+            ovulationTest: noteOvulationTest.value || '',
+            sex,
+            symptoms,
+            mood,
+            weight,
+            temperature
+        };
+
+        saveNotes(notes);
+        calculateCycle();
+    });
+
+    noteClearBtn.addEventListener('click', () => {
+        if (!selectedDate) {
+            alert('Сначала выберите день в календаре.');
+            return;
+        }
+
+        const dateKey = formatKeyDate(selectedDate);
+        const notes = loadNotes();
+        delete notes[dateKey];
+        saveNotes(notes);
+
+        dropsRow.querySelectorAll('.drop-btn').forEach(btn => btn.classList.remove('active'));
+        noteEndPeriod.checked = false;
+        noteText.value = '';
+        noteMedicine.value = '';
+        noteOvulationTest.value = '';
+        noteWeight.value = '';
+        noteTemperature.value = '';
+        chipsRowSex.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+        chipsRowSymptoms.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+        chipsRowMood.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+
+        calculateCycle();
+    });
 
     prevMonthBtn.addEventListener('click', function () {
         if (currentCalendarMonth === 0) {
