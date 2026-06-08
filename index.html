@@ -5,420 +5,17 @@
     <title>Женский календарь</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        :root {
-            --vk-blue: #4C75A3;
-            --vk-blue-light: #e7f1fb;
-            --vk-accent: #f78fb3;
-            --bg-main: #f5f7fb;
-            --card-bg: #ffffff;
-            --text-main: #222;
-            --text-muted: #777;
-            --border-soft: #e0e4ee;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(circle at top left, #f9f0ff 0%, var(--bg-main) 60%);
-            color: var(--text-main);
-        }
-
-        .app {
-            max-width: 520px;
-            margin: 0 auto;
-            padding: 16px;
-        }
-
-        h1 {
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 12px;
-            color: var(--vk-blue);
-        }
-
-        .tagline {
-            font-size: 13px;
-            text-align: center;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 14px;
-            padding: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,0.8);
-        }
-
-        .card-title {
-            font-size: 15px;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--vk-blue);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .card-title span.icon {
-            width: 18px;
-            height: 18px;
-            border-radius: 6px;
-            background: var(--vk-blue-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: var(--vk-blue);
-        }
-
-        label {
-            font-size: 13px;
-            display: block;
-            margin-bottom: 4px;
-            color: #444;
-        }
-
-        input[type="date"],
-        input[type="number"],
-        select,
-        textarea {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 6px 8px;
-            border-radius: 10px;
-            border: 1px solid var(--border-soft);
-            font-size: 13px;
-            margin-bottom: 8px;
-            background: #fafbff;
-        }
-
-        textarea {
-            min-height: 60px;
-            resize: vertical;
-        }
-
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .small {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .summary {
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .summary .info-row {
-            margin-top: 4px;
-        }
-
-        .summary span.label {
-            color: #555;
-        }
-
-        .summary span.value {
-            font-weight: 600;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 8px;
-            border-radius: 999px;
-            background: var(--vk-blue-light);
-            font-size: 11px;
-            color: var(--vk-blue);
-            margin-left: 4px;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .month-name {
-            font-weight: 600;
-        }
-
-        .nav-btn {
-            border: none;
-            background: #eef3fb;
-            color: var(--vk-blue);
-            font-size: 18px;
-            padding: 2px 10px;
-            cursor: pointer;
-            border-radius: 999px;
-        }
-
-        .nav-btn:active {
-            background: #dde7fb;
-        }
-
-        table.calendar {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            font-size: 12px;
-        }
-
-        table.calendar th {
-            text-align: center;
-            padding: 4px 0;
-            color: #999;
-        }
-
-        table.calendar td {
-            height: 42px;
-            text-align: center;
-            vertical-align: middle;
-            border-radius: 10px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-
-        table.calendar td:hover {
-            background: #f0f4ff;
-        }
-
-        table.calendar td span.day-number {
-            display: inline-flex;
-            width: 26px;
-            height: 26px;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        table.calendar td.today span.day-number {
-            border: 1px solid var(--vk-blue);
-        }
-
-        table.calendar td.menstruation {
-            background: #ffe5ea;
-        }
-
-        table.calendar td.fertile {
-            background: #e5f7e5;
-        }
-
-        table.calendar td.ovulation span.day-number {
-            border: 2px solid #f39c12;
-        }
-
-        table.calendar td.has-note::after {
-            content: '';
-            position: absolute;
-            bottom: 4px;
-            right: 8px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--vk-accent);
-        }
-
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            font-size: 12px;
-            margin-top: 8px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .legend-color {
-            width: 10px;
-            height: 10px;
-            border-radius: 3px;
-        }
-
-        .legend-color.mens {
-            background: #ffe5ea;
-        }
-
-        .legend-color.fert {
-            background: #e5f7e5;
-        }
-
-        .legend-color.ovul {
-            border-radius: 50%;
-            border: 2px solid #f39c12;
-            width: 12px;
-            height: 12px;
-            background: transparent;
-        }
-
-        .legend-color.note {
-            background: var(--vk-accent);
-            border-radius: 50%;
-        }
-
-        .note-panel {
-            border-top: 1px dashed var(--border-soft);
-            margin-top: 8px;
-            padding-top: 8px;
-        }
-
-        .note-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .note-date-label {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .note-date-label span {
-            color: var(--vk-blue);
-        }
-
-        .chips-row {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
-        }
-
-        .chip {
-            padding: 4px 8px;
-            border-radius: 999px;
-            border: 1px solid var(--border-soft);
-            font-size: 12px;
-            cursor: pointer;
-            background: #fafbff;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .chip.active {
-            background: var(--vk-blue);
-            color: #fff;
-            border-color: var(--vk-blue);
-        }
-
-        .chip .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--vk-accent);
-        }
-
-        .drops-row {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-
-        .drop-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 1px solid var(--border-soft);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 16px;
-            background: #fafbff;
-        }
-
-        .drop-btn.active {
-            background: #ffceda;
-            border-color: #ff8da7;
-            color: #a0224a;
-        }
-
-        .checkbox-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-
-        .checkbox-row input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-        }
-
-        .row-two-cols {
-            display: flex;
-            gap: 8px;
-        }
-
-        .row-two-cols > div {
-            flex: 1;
-        }
-
-        .section-label {
-            font-size: 13px;
-            font-weight: 500;
-            margin: 6px 0 4px;
-            color: #444;
-        }
-
-        .note-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 6px;
-            margin-top: 6px;
-        }
-
-        .btn {
-            border-radius: 999px;
-            border: none;
-            padding: 6px 12px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: var(--vk-blue);
-            color: #fff;
-        }
-
-        .btn-secondary {
-            background: #eef3fb;
-            color: var(--vk-blue);
-        }
-
-        .note-hint {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-    </style>
+    <!-- Стили -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/calendar.css">
+    <link rel="stylesheet" href="css/notes.css">
 </head>
 <body>
 <div class="app">
     <h1>Женский календарь</h1>
     <div class="tagline">Цикл, овуляция, заметки и самочувствие в одном месте</div>
 
+    <!-- Карточка: данные цикла -->
     <div class="card">
         <div class="card-title">
             <span class="icon">ⓘ</span>
@@ -426,10 +23,10 @@
         </div>
 
         <label for="lastPeriod">Дата начала последней менструации</label>
-        <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
-            <button type="button" id="lastPeriodPrevBtn" style="border:none;background:#eef3fb;color:#4C75A3;border-radius:999px;padding:4px 10px;font-size:14px;cursor:pointer;">◀</button>
-            <input type="date" id="lastPeriod" style="flex:1; margin-bottom: 0;">
-            <button type="button" id="lastPeriodNextBtn" style="border:none;background:#eef3fb;color:#4C75A3;border-radius:999px;padding:4px 10px;font-size:14px;cursor:pointer;">▶</button>
+        <div class="date-row">
+            <button type="button" id="lastPeriodPrevBtn" class="date-arrow-btn">◀</button>
+            <input type="date" id="lastPeriod">
+            <button type="button" id="lastPeriodNextBtn" class="date-arrow-btn">▶</button>
         </div>
 
         <label for="cycleLength">Длина цикла (дней)</label>
@@ -443,6 +40,7 @@
         </div>
     </div>
 
+    <!-- Карточка: расчёт цикла -->
     <div class="card">
         <div class="card-title">
             <span class="icon">❤</span>
@@ -456,7 +54,7 @@
             </div>
             <div class="info-row">
                 <span class="label">Следующая менструация: </span>
-                <span class의 value" id="nextPeriod">—</span>
+                <span class="value" id="nextPeriod">—</span>
             </div>
             <div class="info-row">
                 <span class="label">День овуляции (примерно): </span>
@@ -465,6 +63,7 @@
         </div>
     </div>
 
+    <!-- Карточка: календарь -->
     <div class="card">
         <div class="card-title">
             <span class="icon">📅</span>
@@ -512,79 +111,99 @@
             </div>
         </div>
 
-        <div class="note-panel">
+        <!-- Кнопка для панели заметок -->
+        <button class="btn btn-secondary full-width" id="toggleNotePanelBtn">
+            Заметки на день
+        </button>
+
+        <!-- Панель заметок с вкладками -->
+        <div class="note-panel" id="notePanel">
             <div class="note-panel-header">
                 <div class="note-date-label">
                     День: <span id="noteDateLabel">не выбран</span>
                 </div>
             </div>
 
-            <div class="section-label">Менструация</div>
-            <div class="drops-row" id="dropsRow">
-                <button class="drop-btn" data-level="1">💧</button>
-                <button class="drop-btn" data-level="2">💧💧</button>
-                <button class="drop-btn" data-level="3">💧💧💧</button>
-                <button class="drop-btn" data-level="4">💧💧💧💧</button>
+            <div class="tabs-row" id="noteTabs">
+                <button class="tab-btn active" data-tab="tab-menstruation">Менструация</button>
+                <button class="tab-btn" data-tab="tab-symptoms">Симптомы</button>
+                <button class="tab-btn" data-tab="tab-mood">Настроение</button>
             </div>
 
-            <div class="checkbox-row">
-                <input type="checkbox" id="noteEndPeriod">
-                <label for="noteEndPeriod">Сегодня конец менструации</label>
-            </div>
-
-            <div class="section-label">Общие заметки</div>
-            <textarea id="noteText" placeholder="Свободные заметки о самочувствии, событиях, наблюдениях..."></textarea>
-
-            <div class="section-label">Лекарства и тест</div>
-            <div class="row-two-cols">
-                <div>
-                    <label for="noteMedicine">Лекарство</label>
-                    <input type="text" id="noteMedicine" placeholder="Название / доза">
+            <div class="tab-content active" id="tab-menstruation">
+                <div class="section-label">Менструация</div>
+                <div class="drops-row" id="dropsRow">
+                    <button class="drop-btn" data-level="1">💧</button>
+                    <button class="drop-btn" data-level="2">💧💧</button>
+                    <button class="drop-btn" data-level="3">💧💧💧</button>
+                    <button class="drop-btn" data-level="4">💧💧💧💧</button>
                 </div>
-                <div>
-                    <label for="noteOvulationTest">Тест на овуляцию</label>
-                    <select id="noteOvulationTest">
-                        <option value="">—</option>
-                        <option value="positive">Положительный</option>
-                        <option value="negative">Отрицательный</option>
-                    </select>
-                </div>
-            </div>
 
-            <div class="section-label">События и симптомы</div>
-            <div class="chips-row" id="chipsRowSex">
-                <div class="chip" data-key="sex_yes">
-                    <span class="dot"></span> Половой акт был
+                <div class="checkbox-row">
+                    <input type="checkbox" id="noteEndPeriod">
+                    <label for="noteEndPeriod">Сегодня конец менструации</label>
                 </div>
-                <div class="chip" data-key="sex_no">
-                    <span class="dot"></span> Полового акта не было
+
+                <div class="section-label">Общие заметки</div>
+                <textarea id="noteText" placeholder="Свободные заметки о самочувствии, событиях, наблюдениях..."></textarea>
+
+                <div class="section-label">Лекарства и тест</div>
+                <div class="row-two-cols">
+                    <div>
+                        <label for="noteMedicine">Лекарство</label>
+                        <input type="text" id="noteMedicine" placeholder="Название / доза">
+                    </div>
+                    <div>
+                        <label for="noteOvulationTest">Тест на овуляцию</label>
+                        <select id="noteOvulationTest">
+                            <option value="">—</option>
+                            <option value="positive">Положительный</option>
+                            <option value="negative">Отрицательный</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <div class="chips-row" id="chipsRowSymptoms">
-                <div class="chip" data-key="pain">Боль внизу живота</div>
-                <div class="chip" data-key="breast">Чувствительная грудь</div>
-                <div class="chip" data-key="headache">Головная боль</div>
-                <div class="chip" data-key="pms">ПМС / раздражительность</div>
-                <div class="chip" data-key="fatigue">Усталость</div>
-            </div>
-
-            <div class="section-label">Настроение и параметры</div>
-            <div class="chips-row" id="chipsRowMood">
-                <div class="chip" data-key="calm">Спокойно</div>
-                <div class="chip" data-key="sad">Грусть</div>
-                <div class="chip" data-key="angry">Раздражение</div>
-                <div class="chip" data-key="energy">Много энергии</div>
-            </div>
-
-            <div class="row-two-cols">
-                <div>
-                    <label for="noteWeight">Вес (кг)</label>
-                    <input type="number" id="noteWeight" step="0.1" placeholder="Напр. 60.5">
+            <div class="tab-content" id="tab-symptoms">
+                <div class="section-label">Половой акт</div>
+                <div class="chips-row" id="chipsRowSex">
+                    <div class="chip" data-key="sex_yes">
+                        <span class="dot"></span> Половой акт был
+                    </div>
+                    <div class="chip" data-key="sex_no">
+                        <span class="dot"></span> Полового акта не было
+                    </div>
                 </div>
-                <div>
-                    <label for="noteTemperature">Температура (°C)</label>
-                    <input type="number" id="noteTemperature" step="0.01" placeholder="Напр. 36.6">
+
+                <div class="section-label">Симптомы</div>
+                <div class="chips-row" id="chipsRowSymptoms">
+                    <div class="chip" data-key="pain">Боль внизу живота</div>
+                    <div class="chip" data-key="breast">Чувствительная грудь</div>
+                    <div class="chip" data-key="headache">Головная боль</div>
+                    <div class="chip" data-key="pms">ПМС / раздражительность</div>
+                    <div class="chip" data-key="fatigue">Усталость</div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-mood">
+                <div class="section-label">Настроение</div>
+                <div class="chips-row" id="chipsRowMood">
+                    <div class="chip" data-key="calm">Спокойно</div>
+                    <div class="chip" data-key="sad">Грусть</div>
+                    <div class="chip" data-key="angry">Раздражение</div>
+                    <div class="chip" data-key="energy">Много энергии</div>
+                </div>
+
+                <div class="section-label">Параметры</div>
+                <div class="row-two-cols">
+                    <div>
+                        <label for="noteWeight">Вес (кг)</label>
+                        <input type="number" id="noteWeight" step="0.1" placeholder="Напр. 60.5">
+                    </div>
+                    <div>
+                        <label for="noteTemperature">Температура (°C)</label>
+                        <input type="number" id="noteTemperature" step="0.01" placeholder="Напр. 36.6">
+                    </div>
                 </div>
             </div>
 
@@ -599,465 +218,7 @@
     </div>
 </div>
 
-<script>
-    const lastPeriodInput = document.getElementById('lastPeriod');
-    const lastPeriodPrevBtn = document.getElementById('lastPeriodPrevBtn');
-    const lastPeriodNextBtn = document.getElementById('lastPeriodNextBtn');
-    const cycleLengthInput = document.getElementById('cycleLength');
-    const periodLengthInput = document.getElementById('periodLength');
-
-    const currentDaySpan = document.getElementById('currentDay');
-    const nextPeriodSpan = document.getElementById('nextPeriod');
-    const ovulationDaySpan = document.getElementById('ovulationDay');
-
-    const monthNameDiv = document.getElementById('monthName');
-    const calendarTableBody = document.querySelector('#calendarTable tbody');
-    const prevMonthBtn = document.getElementById('prevMonthBtn');
-    const nextMonthBtn = document.getElementById('nextMonthBtn');
-
-    const noteDateLabel = document.getElementById('noteDateLabel');
-
-    const dropsRow = document.getElementById('dropsRow');
-    const noteEndPeriod = document.getElementById('noteEndPeriod');
-    const noteText = document.getElementById('noteText');
-    const noteMedicine = document.getElementById('noteMedicine');
-    const noteOvulationTest = document.getElementById('noteOvulationTest');
-
-    const chipsRowSex = document.getElementById('chipsRowSex');
-    const chipsRowSymptoms = document.getElementById('chipsRowSymptoms');
-    const chipsRowMood = document.getElementById('chipsRowMood');
-
-    const noteWeight = document.getElementById('noteWeight');
-    const noteTemperature = document.getElementById('noteTemperature');
-
-    const noteSaveBtn = document.getElementById('noteSaveBtn');
-    const noteClearBtn = document.getElementById('noteClearBtn');
-
-    let currentCalendarYear;
-    let currentCalendarMonth;
-    let selectedDate = null;
-
-    const monthNames = [
-        'Январь','Февраль','Март','Апрель','Май','Июнь',
-        'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'
-    ];
-
-    function parseDateFromInput(input) {
-        if (!input.value) return null;
-        const parts = input.value.split('-');
-        if (parts.length !== 3) return null;
-        const year = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10) - 1;
-        const day = parseInt(parts[2], 10);
-        return new Date(year, month, day);
-    }
-
-    function formatDate(date) {
-        if (!date) return '—';
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}.${month}.${year}`;
-    }
-
-    function formatKeyDate(date) {
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${year}-${month}-${day}`;
-    }
-
-    function addDays(date, days) {
-        const result = new Date(date.getTime());
-        result.setDate(result.getDate() + days);
-        return result;
-    }
-
-    function setDateInput(input, date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        input.value = `${year}-${month}-${day}`;
-    }
-
-    function shiftLastPeriod(daysShift) {
-        let currentDate = parseDateFromInput(lastPeriodInput);
-        if (!currentDate) {
-            currentDate = new Date();
-        }
-        currentDate = addDays(currentDate, daysShift);
-        setDateInput(lastPeriodInput, currentDate);
-        calculateCycle();
-    }
-
-    function loadNotes() {
-        try {
-            const raw = localStorage.getItem('vkMenstrualNotes');
-            if (!raw) return {};
-            const parsed = JSON.parse(raw);
-            if (typeof parsed !== 'object' || parsed === null) return {};
-            return parsed;
-        } catch (e) {
-            console.error('Ошибка чтения заметок', e);
-            return {};
-        }
-    }
-
-    function saveNotes(notes) {
-        try {
-            localStorage.setItem('vkMenstrualNotes', JSON.stringify(notes));
-        } catch (e) {
-            console.error('Не удалось сохранить заметки', e);
-        }
-    }
-
-    function getNoteForDate(dateKey, notes) {
-        return notes[dateKey] || null;
-    }
-
-    function calculateCycle() {
-        const lastPeriodDate = parseDateFromInput(lastPeriodInput);
-        const cycleLength = parseInt(cycleLengthInput.value, 10);
-        const periodLength = parseInt(periodLengthInput.value, 10);
-
-        if (!lastPeriodDate || !cycleLength || cycleLength <= 0) {
-            currentDaySpan.textContent = '—';
-            nextPeriodSpan.textContent = '—';
-            ovulationDaySpan.textContent = '—';
-            renderCalendar();
-            return;
-        }
-
-        const today = new Date();
-        const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const lastMidnight = new Date(lastPeriodDate.getFullYear(), lastPeriodDate.getMonth(), lastPeriodDate.getDate());
-        const diffMs = todayMidnight.getTime() - lastMidnight.getTime();
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-        let currentDayCycle = (diffDays % cycleLength) + 1;
-        if (diffDays < 0) {
-            currentDayCycle = 1;
-        }
-
-        currentDaySpan.textContent = diffDays >= 0 ? currentDayCycle : 'ещё не начался';
-
-        let periodsAhead = 0;
-        if (diffDays >= 0) {
-            periodsAhead = Math.floor(diffDays / cycleLength) + 1;
-        }
-        const nextPeriodDate = addDays(lastPeriodDate, periodsAhead * cycleLength);
-        nextPeriodSpan.textContent = formatDate(nextPeriodDate);
-
-        const ovulationOffset = Math.floor(cycleLength / 2);
-        const ovulationDate = addDays(lastPeriodDate, ovulationOffset);
-        ovulationDaySpan.textContent = formatDate(ovulationDate);
-
-        renderCalendar(lastPeriodDate, cycleLength, periodLength, ovulationDate);
-    }
-
-    function getFertileWindow(ovulationDate) {
-        if (!ovulationDate) return null;
-        const start = addDays(ovulationDate, -3);
-        const end = addDays(ovulationDate, 2);
-        return { start, end };
-    }
-
-    function sameDay(d1, d2) {
-        return d1.getFullYear() === d2.getFullYear() &&
-            d1.getMonth() === d2.getMonth() &&
-            d1.getDate() === d2.getDate();
-    }
-
-    function isBetween(date, start, end) {
-        const time = date.getTime();
-        return time >= start.getTime() && time <= end.getTime();
-    }
-
-    function renderCalendar(lastPeriodDate, cycleLength, periodLength, ovulationDate) {
-        const today = new Date();
-
-        if (currentCalendarYear === undefined || currentCalendarMonth === undefined) {
-            currentCalendarYear = today.getFullYear();
-            currentCalendarMonth = today.getMonth();
-        }
-
-        const firstDayOfMonth = new Date(currentCalendarYear, currentCalendarMonth, 1);
-        const firstDayWeek = (firstDayOfMonth.getDay() + 6) % 7;
-        const daysInMonth = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
-
-        monthNameDiv.textContent = `${monthNames[currentCalendarMonth]} ${currentCalendarYear}`;
-
-        calendarTableBody.innerHTML = '';
-
-        let dateNumber = 1;
-        const fertileWindow = ovulationDate ? getFertileWindow(ovulationDate) : null;
-        const notes = loadNotes();
-
-        for (let week = 0; week < 6; week++) {
-            const row = document.createElement('tr');
-
-            for (let weekday = 0; weekday < 7; weekday++) {
-                const cell = document.createElement('td');
-
-                if (week === 0 && weekday < firstDayWeek) {
-                    cell.innerHTML = '';
-                } else if (dateNumber > daysInMonth) {
-                    cell.innerHTML = '';
-                } else {
-                    const cellDate = new Date(currentCalendarYear, currentCalendarMonth, dateNumber);
-                    const span = document.createElement('span');
-                    span.className = 'day-number';
-                    span.textContent = dateNumber;
-
-                    if (sameDay(cellDate, today)) {
-                        cell.classList.add('today');
-                    }
-
-                    if (lastPeriodDate && cycleLength && periodLength && cycleLength > 0) {
-                        for (let n = -1; n <= 3; n++) {
-                            const periodStart = addDays(lastPeriodDate, n * cycleLength);
-                            const periodEnd = addDays(periodStart, periodLength - 1);
-
-                            if (isBetween(cellDate, periodStart, periodEnd)) {
-                                cell.classList.add('menstruation');
-                                break;
-                            }
-                        }
-                    }
-
-                    if (ovulationDate && sameDay(cellDate, ovulationDate)) {
-                        cell.classList.add('ovulation');
-                    }
-
-                    if (fertileWindow && isBetween(cellDate, fertileWindow.start, fertileWindow.end)) {
-                        cell.classList.add('fertile');
-                    }
-
-                    const dateKey = formatKeyDate(cellDate);
-                    const note = getNoteForDate(dateKey, notes);
-                    if (note) {
-                        cell.classList.add('has-note');
-                    }
-
-                    cell.addEventListener('click', () => {
-                        onDayClick(cellDate);
-                    });
-
-                    cell.appendChild(span);
-                    dateNumber++;
-                }
-
-                row.appendChild(cell);
-            }
-
-            calendarTableBody.appendChild(row);
-
-            if (dateNumber > daysInMonth) {
-                break;
-            }
-        }
-    }
-
-    function onDayClick(date) {
-        selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        noteDateLabel.textContent = formatDate(selectedDate);
-
-        const notes = loadNotes();
-        const dateKey = formatKeyDate(selectedDate);
-        const note = getNoteForDate(dateKey, notes);
-
-        dropsRow.querySelectorAll('.drop-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-
-        noteEndPeriod.checked = false;
-        noteText.value = '';
-        noteMedicine.value = '';
-        noteOvulationTest.value = '';
-        noteWeight.value = '';
-        noteTemperature.value = '';
-
-        chipsRowSex.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
-        chipsRowSymptoms.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
-        chipsRowMood.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
-
-        if (note) {
-            if (note.flowLevel) {
-                const btn = dropsRow.querySelector(`.drop-btn[data-level="${note.flowLevel}"]`);
-                if (btn) btn.classList.add('active');
-            }
-            if (note.endPeriod) noteEndPeriod.checked = true;
-            if (note.text) noteText.value = note.text;
-            if (note.medicine) noteMedicine.value = note.medicine;
-            if (note.ovulationTest) noteOvulationTest.value = note.ovulationTest;
-            if (note.weight !== undefined) noteWeight.value = note.weight;
-            if (note.temperature !== undefined) noteTemperature.value = note.temperature;
-
-            if (note.sex) {
-                chipsRowSex.querySelectorAll('.chip').forEach(chip => {
-                    if (chip.dataset.key === note.sex) {
-                        chip.classList.add('active');
-                    }
-                });
-            }
-
-            if (Array.isArray(note.symptoms)) {
-                chipsRowSymptoms.querySelectorAll('.chip').forEach(chip => {
-                    if (note.symptoms.includes(chip.dataset.key)) {
-                        chip.classList.add('active');
-                    }
-                });
-            }
-
-            if (note.mood) {
-                chipsRowMood.querySelectorAll('.chip').forEach(chip => {
-                    if (chip.dataset.key === note.mood) {
-                        chip.classList.add('active');
-                    }
-                });
-            }
-        }
-    }
-
-    dropsRow.addEventListener('click', (event) => {
-        const btn = event.target.closest('.drop-btn');
-        if (!btn) return;
-        dropsRow.querySelectorAll('.drop-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    });
-
-    function setupChipsRow(rowElement, singleSelect) {
-        rowElement.addEventListener('click', (event) => {
-            const chip = event.target.closest('.chip');
-            if (!chip) return;
-
-            if (singleSelect) {
-                rowElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-            } else {
-                chip.classList.toggle('active');
-            }
-        });
-    }
-
-    setupChipsRow(chipsRowSex, true);
-    setupChipsRow(chipsRowMood, true);
-    setupChipsRow(chipsRowSymptoms, false);
-
-    noteSaveBtn.addEventListener('click', () => {
-        if (!selectedDate) {
-            alert('Сначала выберите день в календаре.');
-            return;
-        }
-
-        const dateKey = formatKeyDate(selectedDate);
-        const notes = loadNotes();
-
-        let flowLevel = null;
-        const activeDrop = dropsRow.querySelector('.drop-btn.active');
-        if (activeDrop) {
-            flowLevel = parseInt(activeDrop.dataset.level, 10);
-        }
-
-        let sex = null;
-        chipsRowSex.querySelectorAll('.chip').forEach(chip => {
-            if (chip.classList.contains('active')) {
-                sex = chip.dataset.key;
-            }
-        });
-
-        const symptoms = [];
-        chipsRowSymptoms.querySelectorAll('.chip').forEach(chip => {
-            if (chip.classList.contains('active')) {
-                symptoms.push(chip.dataset.key);
-            }
-        });
-
-        let mood = null;
-        chipsRowMood.querySelectorAll('.chip').forEach(chip => {
-            if (chip.classList.contains('active')) {
-                mood = chip.dataset.key;
-            }
-        });
-
-        const weight = noteWeight.value ? parseFloat(noteWeight.value) : undefined;
-        const temperature = noteTemperature.value ? parseFloat(noteTemperature.value) : undefined;
-
-        notes[dateKey] = {
-            flowLevel,
-            endPeriod: noteEndPeriod.checked,
-            text: noteText.value || '',
-            medicine: noteMedicine.value || '',
-            ovulationTest: noteOvulationTest.value || '',
-            sex,
-            symptoms,
-            mood,
-            weight,
-            temperature
-        };
-
-        saveNotes(notes);
-        calculateCycle();
-    });
-
-    noteClearBtn.addEventListener('click', () => {
-        if (!selectedDate) {
-            alert('Сначала выберите день в календаре.');
-            return;
-        }
-
-        const dateKey = formatKeyDate(selectedDate);
-        const notes = loadNotes();
-        delete notes[dateKey];
-        saveNotes(notes);
-
-        dropsRow.querySelectorAll('.drop-btn').forEach(btn => btn.classList.remove('active'));
-        noteEndPeriod.checked = false;
-        noteText.value = '';
-        noteMedicine.value = '';
-        noteOvulationTest.value = '';
-        noteWeight.value = '';
-        noteTemperature.value = '';
-        chipsRowSex.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
-        chipsRowSymptoms.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
-        chipsRowMood.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
-
-        calculateCycle();
-    });
-
-    prevMonthBtn.addEventListener('click', function () {
-        if (currentCalendarMonth === 0) {
-            currentCalendarMonth = 11;
-            currentCalendarYear--;
-        } else {
-            currentCalendarMonth--;
-        }
-        calculateCycle();
-    });
-
-    nextMonthBtn.addEventListener('click', function () {
-        if (currentCalendarMonth === 11) {
-            currentCalendarMonth = 0;
-            currentCalendarYear++;
-        } else {
-            currentCalendarMonth++;
-        }
-        calculateCycle();
-    });
-
-    lastPeriodPrevBtn.addEventListener('click', function () {
-        shiftLastPeriod(-1);
-    });
-
-    lastPeriodNextBtn.addEventListener('click', function () {
-        shiftLastPeriod(1);
-    });
-
-    lastPeriodInput.addEventListener('change', calculateCycle);
-    cycleLengthInput.addEventListener('input', calculateCycle);
-    periodLengthInput.addEventListener('input', calculateCycle);
-
-    renderCalendar();
-</script>
+<!-- Скрипты -->
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
