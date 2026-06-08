@@ -49,6 +49,7 @@ export function setupNotesUI(state) {
         tabContents
     } = state;
 
+    // Показ/скрытие панели
     toggleNotePanelBtn.addEventListener('click', () => {
         if (!state.selectedDate) {
             alert('Сначала выберите день в календаре.');
@@ -64,6 +65,7 @@ export function setupNotesUI(state) {
         }
     });
 
+    // Вкладки
     noteTabsRow.addEventListener('click', (event) => {
         const btn = event.target.closest('.tab-btn');
         if (!btn) return;
@@ -80,6 +82,7 @@ export function setupNotesUI(state) {
         }
     });
 
+    // Капли
     dropsRow.addEventListener('click', (event) => {
         const btn = event.target.closest('.drop-btn');
         if (!btn) return;
@@ -87,6 +90,7 @@ export function setupNotesUI(state) {
         btn.classList.add('active');
     });
 
+    // Чипы
     setupChipsRow(chipsRowSex, true);
     setupChipsRow(chipsRowMood, true);
     setupChipsRow(chipsRowSymptoms, false);
