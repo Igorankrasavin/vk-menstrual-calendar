@@ -40,10 +40,11 @@ table.calendar td {
     height: 42px;
     text-align: center;
     vertical-align: middle;
-    border-radius: 10px;
+    border-radius: 8px;
     position: relative;
     cursor: pointer;
     transition: background 0.15s ease;
+    border: 1px solid rgba(0,0,0,0.02);
 }
 
 table.calendar td:hover {
@@ -57,24 +58,35 @@ table.calendar td span.day-number {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    font-size: 13px;
 }
 
+/* Сегодняшний день — синий кружок с белой цифрой */
 table.calendar td.today span.day-number {
-    border: 1px solid var(--vk-blue);
+    background: var(--vk-blue);
+    color: #fff;
+    font-weight: 600;
 }
 
+/* Менструация */
 table.calendar td.menstruation {
     background: #ffe5ea;
+    color: #a0224a;
 }
 
+/* Фертильные дни */
 table.calendar td.fertile {
     background: #e5f7e5;
+    color: #1b7a1b;
 }
 
+/* Овуляция — жёлтая обводка с лёгкой тенью */
 table.calendar td.ovulation span.day-number {
     border: 2px solid #f39c12;
+    box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.25);
 }
 
+/* Точка внизу справа, если есть заметки */
 table.calendar td.has-note::after {
     content: '';
     position: absolute;
@@ -86,6 +98,7 @@ table.calendar td.has-note::after {
     background: var(--vk-accent);
 }
 
+/* Подписи-легенда под календарём */
 .legend {
     display: flex;
     flex-wrap: wrap;
@@ -125,4 +138,12 @@ table.calendar td.has-note::after {
 .legend-color.note {
     background: var(--vk-accent);
     border-radius: 50%;
+}
+
+/* Иконки 💊 🙂 ⚡ в правом верхнем углу ячейки */
+.calendar-note-icons {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 11px;
 }
