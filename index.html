@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>VK Menstrual Calendar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f4fa;
+            color: #333;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        h1 {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        label {
+            font-size: 14px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 6px 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .small {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .summary {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .summary span.label {
+            color: #666;
+        }
+
+        .summary span.value {
+            font-weight: 600;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .month-name {
+            font-weight: 600;
+        }
+
+        .nav-btn {
+            border: none;
+            background: none;
+            font-size: 18px;
+            padding: 2px 8px;
+            cursor: pointer;
+        }
+
+        table.calendar {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 12px;
+        }
+
+        table.calendar th {
+            text-align: center;
+            padding: 4px 0;
+            color: #999;
+        }
+
+        table.calendar td {
+            height: 40px;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        table.calendar td span.day-number {
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            line-height: 26px;
+            border-radius: 50%;
+        }
+
+        table.calendar td.today span.day-number {
+            border: 1px solid #8e44ad;
+        }
+
+        table.calendar td.menstruation {
+            background: #ffe5ea;
+        }
+
+        table.calendar td.fertile {
+            background: #e5f7e5;
+        }
+
+        table.calendar td.ovulation span.day-number {
+            border: 2px solid #f39c12;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        .legend-color.mens {
+            background: #ffe5ea;
+        }
+
+        .legend-color.fert {
+            background: #e5f7e5;
+        }
+
+        .legend-color.ovul {
+            border-radius: 50%;
+            border: 2px solid #f39c12;
+            width: 12px;
+            height: 12px;
+            background: transparent;
+        }
+
+        .info-row {
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <h1>Женский календарь</h1>
+
+    <div class="card">
+        <div class="card-title">Данные цикла</div>
+
+        <label for="lastPeriod">Дата начала последней менструации</label>
+        <input type="date" id="lastPeriod">
+
+        <label for="cycleLength">Длина цикла (дней)</label>
+        <input type="number" id="cycleLength" min="15" max="60" value="28">
+
+        <label for="periodLength">Длительность менструации (дней)</label>
+        <input type="number" id="periodLength" min="1" max="10" value="5">
+
+        <div class="small">
+            Эти данные можно изменить в любой момент, расчёты обновятся автоматически.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Расчёт цикла</div>
+        <div class="summary">
+            <div class="info-row">
+                <span class="label">Текущий день цикла: </span>
+                <span class="value" id="currentDay">—</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Следующая менструация: </span>
+                <span class="value" id="nextPeriod">—</span>
+            </div>
+            <div class="info-row">
+                <span class="label">День овуляции (примерно): </span>
+                <span class="value" id="ovulationDay">—</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="calendar-header">
+            <button class="nav-btn" id="prevMonthBtn">&lt;</button>
+            <div class="month-name" id="monthName"></div>
+            <button class="nav-btn" id="nextMonthBtn">&gt;</button>
+        </div>
+
+        <table class="calendar" id="calendarTable">
+            <thead>
+            <tr>
+                <th>Пн</th>
+                <th>Вт</th>
+                <th>Ср</th>
+                <th>Чт</th>
+                <th>Пт</th>
+                <th>Сб</th>
+                <th>Вс</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- сюда JS вставит строки -->
+            </tbody>
+        </table>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color mens"></div>
+                <span>менструация</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color fert"></div>
+                <span>фертильные дни</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color ovul"></div>
+                <span>овуляция</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const lastPeriodInput = document.getElementById('lastPeriod');
+    const cycleLengthInput = document.getElementById('cycleLength');
+    const periodLengthInput = document.getElementById('periodLength');
+
+    const currentDaySpan = document.getElementById('currentDay');
+    const nextPeriodSpan = document.getElementById('nextPeriod');
+    const ovulationDaySpan = document.getElementById('ovulationDay');
+
+    const monthNameDiv = document.getElementById('monthName');
+    const calendarTableBody = document.querySelector('#calendarTable tbody');
+    const prevMonthBtn = document.getElementById('prevMonthBtn');
+    const nextMonthBtn = document.getElementById('nextMonthBtn');
+
+    let currentCalendarYear;
+    let currentCalendarMonth; // 0-11
+
+    const monthNames = [
+        'Январь','Февраль','Март','Апрель','Май','Июнь',
+        'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'
+    ];
+
+    function parseDateFromInput(input) {
+        if (!input.value) return null;
+        const parts = input.value.split('-'); // yyyy-mm-dd
+        if (parts.length !== 3) return null;
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+    }
+
+    function formatDate(date) {
+        if (!date) return '—';
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}.${month}.${year}`;
+    }
+
+    function addDays(date, days) {
+        const result = new Date(date.getTime());
+        result.setDate(result.getDate() + days);
+        return result;
+    }
+
+    function calculateCycle() {
+        const lastPeriodDate = parseDateFromInput(lastPeriodInput);
+        const cycleLength = parseInt(cycleLengthInput.value, 10);
+        const periodLength = parseInt(periodLengthInput.value, 10);
+
+        if (!lastPeriodDate || !cycleLength || cycleLength <= 0) {
+            currentDaySpan.textContent = '—';
+            nextPeriodSpan.textContent = '—';
+            ovulationDaySpan.textContent = '—';
+            renderCalendar();
+            return;
+        }
+
+        const today = new Date();
+        const diffMs = today.setHours(0,0,0,0) - lastPeriodDate.setHours(0,0,0,0);
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        let currentDayCycle = (diffDays % cycleLength) + 1;
+        if (diffDays < 0) {
+            currentDayCycle = 1;
+        }
+
+        currentDaySpan.textContent = diffDays >= 0 ? currentDayCycle : 'ещё не начался';
+
+        let periodsAhead = 0;
+        if (diffDays >= 0) {
+            periodsAhead = Math.floor(diffDays / cycleLength) + 1;
+        }
+        const nextPeriodDate = addDays(lastPeriodDate, periodsAhead * cycleLength);
+        nextPeriodSpan.textContent = formatDate(nextPeriodDate);
+
+        const ovulationOffset = Math.floor(cycleLength / 2);
+        const ovulationDate = addDays(lastPeriodDate, ovulationOffset);
+        ovulationDaySpan.textContent = formatDate(ovulationDate);
+
+        renderCalendar(lastPeriodDate, cycleLength, periodLength, ovulationDate);
+    }
+
+    function getFertileWindow(ovulationDate) {
+        if (!ovulationDate) return null;
+        const start = addDays(ovulationDate, -3);
+        const end = addDays(ovulationDate, 2);
+        return { start, end };
+    }
+
+    function sameDay(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate();
+    }
+
+    function isBetween(date, start, end) {
+        const time = date.getTime();
+        return time >= start.getTime() && time <= end.getTime();
+    }
+
+    function renderCalendar(lastPeriodDate, cycleLength, periodLength, ovulationDate) {
+        const today = new Date();
+
+        if (currentCalendarYear === undefined || currentCalendarMonth === undefined) {
+            currentCalendarYear = today.getFullYear();
+            currentCalendarMonth = today.getMonth();
+        }
+
+        const firstDayOfMonth = new Date(currentCalendarYear, currentCalendarMonth, 1);
+        const firstDayWeek = (firstDayOfMonth.getDay() + 6) % 7;
+        const daysInMonth = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
+
+        monthNameDiv.textContent = `${monthNames[currentCalendarMonth]} ${currentCalendarYear}`;
+
+        calendarTableBody.innerHTML = '';
+
+        let dateNumber = 1;
+        const fertileWindow = ovulationDate ? getFertileWindow(ovulationDate) : null;
+
+        for (let week = 0; week < 6; week++) {
+            const row = document.createElement('tr');
+
+            for (let weekday = 0; weekday < 7; weekday++) {
+                const cell = document.createElement('td');
+
+                if (week === 0 && weekday < firstDayWeek) {
+                    cell.innerHTML = '';
+                } else if (dateNumber > daysInMonth) {
+                    cell.innerHTML = '';
+                } else {
+                    const cellDate = new Date(currentCalendarYear, currentCalendarMonth, dateNumber);
+                    const span = document.createElement('span');
+                    span.className = 'day-number';
+                    span.textContent = dateNumber;
+
+                    if (sameDay(cellDate, today)) {
+                        cell.classList.add('today');
+                    }
+
+                    if (lastPeriodDate && cycleLength && periodLength && cycleLength > 0) {
+                        let tempStart = new Date(lastPeriodDate.getTime());
+                        for (let n = -1; n <= 3; n++) {
+                            const periodStart = addDays(lastPeriodDate, n * cycleLength);
+                            const periodEnd = addDays(periodStart, periodLength - 1);
+
+                            if (isBetween(cellDate, periodStart, periodEnd)) {
+                                cell.classList.add('menstruation');
+                                break;
+                            }
+                        }
+                    }
+
+                    if (ovulationDate && sameDay(cellDate, ovulationDate)) {
+                        cell.classList.add('ovulation');
+                    }
+
+                    if (fertileWindow && isBetween(cellDate, fertileWindow.start, fertileWindow.end)) {
+                        cell.classList.add('fertile');
+                    }
+
+                    cell.appendChild(span);
+                    dateNumber++;
+                }
+
+                row.appendChild(cell);
+            }
+
+            calendarTableBody.appendChild(row);
+
+            if (dateNumber > daysInMonth) {
+                break;
+            }
+        }
+    }
+
+    prevMonthBtn.addEventListener('click', function () {
+        if (currentCalendarMonth === 0) {
+            currentCalendarMonth = 11;
+            currentCalendarYear--;
+        } else {
+            currentCalendarMonth--;
+        }
+        calculateCycle();
+    });
+
+    nextMonthBtn.addEventListener('click', function () {
+        if (currentCalendarMonth === 11) {
+            currentCalendarMonth = 0;
+            currentCalendarYear++;
+        } else {
+            currentCalendarMonth++;
+        }
+        calculateCycle();
+    });
+
+    lastPeriodInput.addEventListener('change', calculateCycle);
+    cycleLengthInput.addEventListener('input', calculateCycle);
+    periodLengthInput.addEventListener('input', calculateCycle);
+
+    renderCalendar();
+</script>
+</body>
+</html>
