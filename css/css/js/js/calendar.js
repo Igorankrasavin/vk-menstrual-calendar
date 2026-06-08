@@ -1,4 +1,11 @@
-import { parseDateFromInput, formatDate, formatKeyDate, addDays, sameDay, isBetween } from './utils.js';
+import {
+    parseDateFromInput,
+    formatDate,
+    formatKeyDate,
+    addDays,
+    sameDay,
+    isBetween
+} from './utils.js';
 import { loadNotes, getNoteForDate } from './notes.js';
 
 export function setupCalendar(state) {
