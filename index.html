@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
->
 <head>
     <meta charset="UTF-8">
-    <title>Женский календарь</цикл>
-    ,бкпршз+*+8ickeymeta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Женский календарь</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         :root {
@@ -457,11 +456,11 @@
             </div>
             <div class="info-row">
                 <span class="label">Следующая менструация: </span>
-                <span class="value" id="nextPeriod">—</span>
+                <span class의 value" id="nextPeriod">—</span>
             </div>
             <div class="info-row">
                 <span class="label">День овуляции (примерно): </span>
-                <span class="value" id="ovationDay">—</span>
+                <span class="value" id="ovulationDay">—</span>
             </div>
         </div>
     </div>
@@ -513,7 +512,7 @@
             </div>
         </div>
 
-        <div class="note-panel" id="notePanel">
+        <div class="note-panel">
             <div class="note-panel-header">
                 <div class="note-date-label">
                     День: <span id="noteDateLabel">не выбран</span>
@@ -609,7 +608,7 @@
 
     const currentDaySpan = document.getElementById('currentDay');
     const nextPeriodSpan = document.getElementById('nextPeriod');
-    const ovationDaySpan = document.getElementById('ovationDay');
+    const ovulationDaySpan = document.getElementById('ovulationDay');
 
     const monthNameDiv = document.getElementById('monthName');
     const calendarTableBody = document.querySelector('#calendarTable tbody');
@@ -724,7 +723,7 @@
         if (!lastPeriodDate || !cycleLength || cycleLength <= 0) {
             currentDaySpan.textContent = '—';
             nextPeriodSpan.textContent = '—';
-            ovationDaySpan.textContent = '—';
+            ovulationDaySpan.textContent = '—';
             renderCalendar();
             return;
         }
@@ -751,7 +750,7 @@
 
         const ovulationOffset = Math.floor(cycleLength / 2);
         const ovulationDate = addDays(lastPeriodDate, ovulationOffset);
-        ovationDaySpan.textContent = formatDate(ovulationDate);
+        ovulationDaySpan.textContent = formatDate(ovulationDate);
 
         renderCalendar(lastPeriodDate, cycleLength, periodLength, ovulationDate);
     }
