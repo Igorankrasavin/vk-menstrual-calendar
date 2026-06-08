@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
+>
 <head>
     <meta charset="UTF-8">
-    <title>Женский календарь</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Женский календарь</цикл>
+    ,бкпршз+*+8ickeymeta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         :root {
@@ -426,7 +427,11 @@
         </div>
 
         <label for="lastPeriod">Дата начала последней менструации</label>
-        <input type="date" id="lastPeriod">
+        <div style="display: flex; gap: 6px; align-items: center; margin-bottom: 8px;">
+            <button type="button" id="lastPeriodPrevBtn" style="border:none;background:#eef3fb;color:#4C75A3;border-radius:999px;padding:4px 10px;font-size:14px;cursor:pointer;">◀</button>
+            <input type="date" id="lastPeriod" style="flex:1; margin-bottom: 0;">
+            <button type="button" id="lastPeriodNextBtn" style="border:none;background:#eef3fb;color:#4C75A3;border-radius:999px;padding:4px 10px;font-size:14px;cursor:pointer;">▶</button>
+        </div>
 
         <label for="cycleLength">Длина цикла (дней)</label>
         <input type="number" id="cycleLength" min="15" max="60" value="28">
@@ -456,7 +461,7 @@
             </div>
             <div class="info-row">
                 <span class="label">День овуляции (примерно): </span>
-                <span class="value" id="ovulationDay">—</span>
+                <span class="value" id="ovationDay">—</span>
             </div>
         </div>
     </div>
@@ -486,7 +491,6 @@
             </tr>
             </thead>
             <tbody>
-            <!-- сюда JS вставит строки -->
             </tbody>
         </table>
 
@@ -598,19 +602,20 @@
 
 <script>
     const lastPeriodInput = document.getElementById('lastPeriod');
+    const lastPeriodPrevBtn = document.getElementById('lastPeriodPrevBtn');
+    const lastPeriodNextBtn = document.getElementById('lastPeriodNextBtn');
     const cycleLengthInput = document.getElementById('cycleLength');
     const periodLengthInput = document.getElementById('periodLength');
 
     const currentDaySpan = document.getElementById('currentDay');
     const nextPeriodSpan = document.getElementById('nextPeriod');
-    const ovulationDaySpan = document.getElementById('ovulationDay');
+    const ovationDaySpan = document.getElementById('ovationDay');
 
     const monthNameDiv = document.getElementById('monthName');
     const calendarTableBody = document.querySelector('#calendarTable tbody');
     const prevMonthBtn = document.getElementById('prevMonthBtn');
     const nextMonthBtn = document.getElementById('nextMonthBtn');
 
-    const notePanel = document.getElementById('notePanel');
     const noteDateLabel = document.getElementById('noteDateLabel');
 
     const dropsRow = document.getElementById('dropsRow');
@@ -630,7 +635,7 @@
     const noteClearBtn = document.getElementById('noteClearBtn');
 
     let currentCalendarYear;
-    let currentCalendarMonth; // 0-11
+    let currentCalendarMonth;
     let selectedDate = null;
 
     const monthNames = [
@@ -640,7 +645,7 @@
 
     function parseDateFromInput(input) {
         if (!input.value) return null;
-        const parts = input.value.split('-'); // yyyy-mm-dd
+        const parts = input.value.split('-');
         if (parts.length !== 3) return null;
         const year = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10) - 1;
@@ -669,6 +674,48 @@
         return result;
     }
 
+    function setDateInput(input, date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        input.value = `${year}-${month}-${day}`;
+    }
+
+    function shiftLastPeriod(daysShift) {
+        let currentDate = parseDateFromInput(lastPeriodInput);
+        if (!currentDate) {
+            currentDate = new Date();
+        }
+        currentDate = addDays(currentDate, daysShift);
+        setDateInput(lastPeriodInput, currentDate);
+        calculateCycle();
+    }
+
+    function loadNotes() {
+        try {
+            const raw = localStorage.getItem('vkMenstrualNotes');
+            if (!raw) return {};
+            const parsed = JSON.parse(raw);
+            if (typeof parsed !== 'object' || parsed === null) return {};
+            return parsed;
+        } catch (e) {
+            console.error('Ошибка чтения заметок', e);
+            return {};
+        }
+    }
+
+    function saveNotes(notes) {
+        try {
+            localStorage.setItem('vkMenstrualNotes', JSON.stringify(notes));
+        } catch (e) {
+            console.error('Не удалось сохранить заметки', e);
+        }
+    }
+
+    function getNoteForDate(dateKey, notes) {
+        return notes[dateKey] || null;
+    }
+
     function calculateCycle() {
         const lastPeriodDate = parseDateFromInput(lastPeriodInput);
         const cycleLength = parseInt(cycleLengthInput.value, 10);
@@ -677,7 +724,7 @@
         if (!lastPeriodDate || !cycleLength || cycleLength <= 0) {
             currentDaySpan.textContent = '—';
             nextPeriodSpan.textContent = '—';
-            ovulationDaySpan.textContent = '—';
+            ovationDaySpan.textContent = '—';
             renderCalendar();
             return;
         }
@@ -704,7 +751,7 @@
 
         const ovulationOffset = Math.floor(cycleLength / 2);
         const ovulationDate = addDays(lastPeriodDate, ovulationOffset);
-        ovulationDaySpan.textContent = formatDate(ovulationDate);
+        ovationDaySpan.textContent = formatDate(ovulationDate);
 
         renderCalendar(lastPeriodDate, cycleLength, periodLength, ovulationDate);
     }
@@ -725,28 +772,6 @@
     function isBetween(date, start, end) {
         const time = date.getTime();
         return time >= start.getTime() && time <= end.getTime();
-    }
-
-    function loadNotes() {
-        try {
-            const raw = localStorage.getItem('vkMenstrualNotes');
-            if (!raw) return {};
-            return JSON.parse(raw);
-        } catch (e) {
-            return {};
-        }
-    }
-
-    function saveNotes(notes) {
-        try {
-            localStorage.setItem('vkMenstrualNotes', JSON.stringify(notes));
-        } catch (e) {
-            console.error('Не удалось сохранить заметки', e);
-        }
-    }
-
-    function getNoteForDate(dateKey, notes) {
-        return notes[dateKey] || null;
     }
 
     function renderCalendar(lastPeriodDate, cycleLength, periodLength, ovulationDate) {
@@ -1019,6 +1044,14 @@
             currentCalendarMonth++;
         }
         calculateCycle();
+    });
+
+    lastPeriodPrevBtn.addEventListener('click', function () {
+        shiftLastPeriod(-1);
+    });
+
+    lastPeriodNextBtn.addEventListener('click', function () {
+        shiftLastPeriod(1);
     });
 
     lastPeriodInput.addEventListener('change', calculateCycle);
