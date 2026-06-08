@@ -1,0 +1,155 @@
+.note-panel {
+    border-top: 1px dashed var(--border-soft);
+    margin-top: 8px;
+    padding-top: 8px;
+    display: none;
+}
+
+.note-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.note-date-label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.note-date-label span {
+    color: var(--vk-blue);
+}
+
+.section-label {
+    font-size: 13px;
+    font-weight: 500;
+    margin: 6px 0 4px;
+    color: #444;
+}
+
+.chips-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.chip {
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    font-size: 12px;
+    cursor: pointer;
+    background: #fafbff;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.chip.active {
+    background: var(--vk-blue);
+    color: #fff;
+    border-color: var(--vk-blue);
+}
+
+.chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--vk-accent);
+}
+
+.drops-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.drop-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    background: #fafbff;
+}
+
+.drop-btn.active {
+    background: #ffceda;
+    border-color: #ff8da7;
+    color: #a0224a;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.row-two-cols {
+    display: flex;
+    gap: 8px;
+}
+
+.row-two-cols > div {
+    flex: 1;
+}
+
+.note-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.note-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Вкладки */
+
+.tabs-row {
+    display: flex;
+    gap: 6px;
+    margin: 6px 0 8px;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.tab-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 6px 4px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+}
+
+.tab-btn.active {
+    color: var(--vk-blue);
+    border-bottom-color: var(--vk-blue);
+    font-weight: 500;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
