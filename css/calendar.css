@@ -1,0 +1,128 @@
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.month-name {
+    font-weight: 600;
+}
+
+.nav-btn {
+    border: none;
+    background: #eef3fb;
+    color: var(--vk-blue);
+    font-size: 18px;
+    padding: 2px 10px;
+    cursor: pointer;
+    border-radius: 999px;
+}
+
+.nav-btn:active {
+    background: #dde7fb;
+}
+
+table.calendar {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+}
+
+table.calendar th {
+    text-align: center;
+    padding: 4px 0;
+    color: #999;
+}
+
+table.calendar td {
+    height: 42px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+table.calendar td:hover {
+    background: #f0f4ff;
+}
+
+table.calendar td span.day-number {
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+table.calendar td.today span.day-number {
+    border: 1px solid var(--vk-blue);
+}
+
+table.calendar td.menstruation {
+    background: #ffe5ea;
+}
+
+table.calendar td.fertile {
+    background: #e5f7e5;
+}
+
+table.calendar td.ovulation span.day-number {
+    border: 2px solid #f39c12;
+}
+
+table.calendar td.has-note::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    right: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--vk-accent);
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.legend-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+}
+
+.legend-color.mens {
+    background: #ffe5ea;
+}
+
+.legend-color.fert {
+    background: #e5f7e5;
+}
+
+.legend-color.ovul {
+    border-radius: 50%;
+    border: 2px solid #f39c12;
+    width: 12px;
+    height: 12px;
+    background: transparent;
+}
+
+.legend-color.note {
+    background: var(--vk-accent);
+    border-radius: 50%;
+}
